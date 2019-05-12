@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 function server(pathname, res){
-	console.log(pathname)
+	//console.log(pathname)
 	let path = "./public" + pathname
 	fs.stat(path, function(err, stat){
 		if(err) {

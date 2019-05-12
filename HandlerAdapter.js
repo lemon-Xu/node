@@ -31,37 +31,28 @@ function send(req, res){
 			return;
 		} 
 
-		let reqStr = ""; // 接受请求
-		let parse = {    // HandlerAdapter parse参数
-			method:"",
-			parameter: {
+		let method = req.method;
+		let parameter = "";
 
-			}
-		};
-
-		parse["method"] = req.method;
-	    if(req.method == "GET"){
+	    if(method == "GET"){
 	    	// 多参没有测试
 	    	let GET = url.parse(req.url, true).query;
-	    	parse["parameter"] = GET;
-	    	console.log("GET: ",req.url,"\n",GET);
+	    	parameter = GET;
+	    	console.log("解析GET: ",req.url,"\n",parameter);
 
-	    } else if(req.method == "POST") {
+	    } else if(method == "POST") {
 	    	// 解析可能错误
 	    	var post = querystring.parse(reqStr);
-       		parse["paramete"] = post;
-       		console.log("POST:",util.inspect(post))
+       		parameter = post;
+       		console.log("解析POST:",parameter);
 	    };  
 
 		console.log("---------------")
 
-		let method = parse["method"];
-		let parameter = parse["parameter"];
+		
 		console.log("method: ",method," parameter: ", parameter);
 		server.server(method, parameter, res);
-		 });  
-	   
-	console.log();
+	});  
 }
 
 exports.send = send

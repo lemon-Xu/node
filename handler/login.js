@@ -1,4 +1,6 @@
 const fs = require("fs")
+const fileServer = require("./fileServer");
+
 var parameter = "";
 var res = "";
 function server(method, para, response){
@@ -18,12 +20,8 @@ function GET(){
 function POST(){
 	let user = parameter["user"];
 	let password = parameter["password"];
-	let json = {
-		"a": "登陆成功"
-	};
-	res.setHeader('Content-Type','text/plain;charset=UTF-8');
-	res.write(JSON.stringify(json));
-	res.end();
+	if (user == "lemon" && password == 123)
+		fileServer.server('/practice/home.html', res);
 }
 
 exports.server = server

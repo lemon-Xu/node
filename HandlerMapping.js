@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 var mapJson = ""
-var dev = true;
+var dev = false;
 const DBUGS = "DBUG HandlerMapping "
 
 function getMapping() {
