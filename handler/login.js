@@ -18,6 +18,7 @@ function GET(){
 }
 
 function POST(){
+	console.log("用户登陆");
 	let user = parameter["user"];
 	let password = parameter["password"];
 	if (user == "lemon" && password == 123)

@@ -4,9 +4,9 @@ const HandlerAdapter = require('./HandlerAdapter.js');
 
 
 http.createServer(function(req, res){
-	
-	let ret =  HandlerAdapter.send(req, res);
 	console.log("收到一个请求");
+	let ret =  HandlerAdapter.send(req, res);
+	
 	
 
 

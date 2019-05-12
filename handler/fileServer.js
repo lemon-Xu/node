@@ -2,7 +2,9 @@ const fs = require("fs");
 
 function server(pathname, res){
 	//console.log(pathname)
-	let path = "./public" + pathname
+	let path = "./public" + pathname;
+	console.log("静态文件服务: pathname",pathname);
+	console.log(path);
 	fs.stat(path, function(err, stat){
 		if(err) {
 			if('ENOENT' == err.code) {
