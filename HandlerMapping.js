@@ -6,8 +6,8 @@ var dev = false;
 const DBUGS = "DBUG HandlerMapping "
 
 function getMapping() {
-	let Maping = fs.readFileSync('./Maping.json');
-	mapJson = JSON.parse(Maping);
+	let HandlerMaping = fs.readFileSync('./HandlerMaping.json');
+	mapJson = JSON.parse(HandlerMaping);
 
 	if(dev) {
 		color("getMapping() 解析完成 mapJson:\n");

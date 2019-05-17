@@ -1,6 +1,6 @@
 const http = require('http');
 
-const HandlerAdapter = require('./HandlerAdapter.js');
+const HandlerAdapter = require('./HandlerAdapter');
 
 
 http.createServer(function(req, res){

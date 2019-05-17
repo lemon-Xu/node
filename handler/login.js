@@ -1,5 +1,5 @@
 const fs = require("fs")
-const fileServer = require("./fileServer");
+const fileServer = require("../fileServer");
 
 var parameter = "";
 var res = "";
@@ -14,7 +14,7 @@ function server(method, para, response){
 }
 
 function GET(){
-
+	fileServer.publicFileServer('/login.html', res);
 }
 
 function POST(){
@@ -22,7 +22,7 @@ function POST(){
 	let user = parameter["user"];
 	let password = parameter["password"];
 	if (user == "lemon" && password == 123)
-		fileServer.server('/practice/home.html', res);
+		fileServer.privateFileServer('/practice/home.html', res);
 }
 
 exports.server = server

@@ -4,22 +4,23 @@ const util = require('util');
 const querystring = require('querystring');
 
 const HandlerMapping = require('./HandlerMapping.js');
-const fileServer = require('./handler/fileServer.js')
+const fileServer = require('./fileServer.js');
 
 function send(req, res){
 	let method = req.method;
 	let pathname = url.parse(req.url, true).pathname;
+	console.log(url.parse(req.url, true));
 	let handler = HandlerMapping.getHandler(pathname); // 获得Handler处理程序名
-	let server = require("./handler/"+handler); // 注册handler
 	let parameter = "";
 
 	console.log("handler",handler,"  pathname:",pathname,"  server:","./handler/"+handler);
 	// 静态文件服务
 	if(handler == "fileServer"){
 		console.log("请求静态文件服务-------");
-		fileServer.server(pathname, res);
+		fileServer.publicFileServer(pathname, res);
 		return;
 	} 
+	let server = require("./handler/"+handler); // 注册handler
 	if(method == "GET"){
 		// 多参没有测试
 		let GET = url.parse(req.url, true).query;
