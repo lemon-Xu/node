@@ -16,6 +16,7 @@ function replace$(str, param){
 
 function resolveLogic(str, param){
 	let arrWord = str.trim().split(/\s+/);
+	console.log("arrWord{arrWord}",arrWord);
 	let logic = false;
 	let operatorLogic = ["==", "!=", "&&", "||"];
 

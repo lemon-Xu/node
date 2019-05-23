@@ -3,8 +3,55 @@
 <head>
 	<meta charset="UTF-8">
 	<title>home</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+  	<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
 </head>
 <body>
-	<div>工程实践</div>
+<div id="app">
+	<nav class="top-bar" data-topbar>
+  		<ul class="title-area">
+    		<li class="name">
+      			<!-- 如果你不需要标题或图标可以删掉它 -->
+      			<h1><a href="#">图书借阅系统</a></h1>
+   			</li>
+      	<!-- 小屏幕上折叠按钮: 去掉 .menu-icon 类，可以去除图标。 
+      	如果需要只显示图片，可以删除 "Menu" 文本 -->
+   			 <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  		</ul>
+
+  		<section class="top-bar-section">
+    		<ul class="left">
+      			<li class="active"><a href="#">Home</a></li>
+      			<li><a href="#">Page 1</a></li>
+			      <li><a href="#">Page 2</a></li>
+			      <li><a href="#">Page 3</a></li> 
+    		</ul>
+ 		 </section>
+	</nav>
+</div>
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<script type="text/javascript" src="../../public/vue1.js"></script>
+<script type="text/javascript" src="../../public/axios.min.js"></script>
+
+<!-- 初始化 Foundation JS -->
+<script>
+$(document).ready(function() {
+    $(document).foundation();
+})
+</script>
+
+<script>
+	const localhost = "http://localhost:8000";
+	var app = new Vue({
+		el: '#app',
+		data: {
+			
+		}
+	});
+</script>
 </body>
 </html>
