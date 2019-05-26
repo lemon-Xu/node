@@ -25,13 +25,13 @@ function fileServer(pathname, res){
 
 function privateFileServer(pathname, res) {
 	let file = './private'+pathname;
-	console.log('私有文件服务',pathname, file);
+	// console.log('私有文件服务',pathname, file);
 	fileServer(file, res);
 }
 
 function publicFileServer(pathname, res) {
 	let file = './public'+pathname;
-	console.log('静态文件服务',pathname, file);
+	// console.log('静态文件服务',pathname, file);
 	fileServer(file, res);
 }
 exports.privateFileServer = privateFileServer;

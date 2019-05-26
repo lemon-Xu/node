@@ -16,9 +16,9 @@
 <div id="app" class="row" style="margin-top: 2rem;">
    <div class="small-0 medium-6 columns">&nbsp</div>
    <div class="small-12 medium-6 columns c">
-      <form action="/login" method="post">
+      
          <fieldset>
-            <legend>Sign&nbspin <small>&nbsp&nbspRegister</small></legend>
+            <legend v-on:click="titleSwitch()">{{title.legend}} <small>{{title.small}}</small></legend>
             <div class="row collapse prefix-radius">
                <!-- user and password -->
                <div class="small-12 columns" style="height:2.5rem;"></div>
@@ -26,15 +26,21 @@
                   <label class="prefix fi-torso" for="user"></laber>
                </div>
                <div class="small-10 columns">
-                  <input type="text"  id="user" name="user" placeholder="学号/工号">
+                  <input type="text"  id="user" name="user" v-model="user" placeholder="学号/工号">
                </div>
                <div class="small-2 columns">
                   <label for="password" class="prefix fi-lock"></label>
                </div>
                <div class="small-10 columns">
-                  <input type="password" name="password" id="password">
+                  <input type="password" name="password" v-model="password" id="password">
                </div>
-               
+
+               <div class="small-2 columns" v-if="types == 'register'">
+                  <label for="password" class="prefix fi-lock"></label>
+               </div>
+               <div class="small-10 columns" v-if="types == 'register'">
+                  <input  type="password" name="password" v-model="password2" id="passwrod2">
+              </div>
 
                <!-- login and forget -->
                <div class="small-12 columns" style="height:1.5rem;"></div>
@@ -48,14 +54,15 @@
                </div>
                <div class="small-12 columns" style="height:3rem;"></div>
 
-             
-               <input type="submit" value="登陆" class="button round small-12 columns"/>
+               <input type="submit" v-if="types == 'login'" value="登陆" class="button round small-12 columns" v-on:click="login()"/>
+                
+               <input type="submit" v-else-if="types == 'register'" value="注册" class="button round small-12 columns" v-on:click="register()"/>
                
 
 
             </div>
          </fieldset>        
-      </form>      
+         
    </div>
    <div class="medium-2 columns">&nbsp</div>
 </div>
@@ -64,32 +71,79 @@
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
 <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
-<script type="text/javascript" src="vue1.js"></script>
-<script type="text/javascript" src="axios.min.js"></script>
+<script src="vue1.js"></script>
+<script src="axios.min.js"></script>
 
 <script>
   const localhost = "http://localhost:8000";
   var app = new Vue({
     el: '#app',
     data: {
+      title: {
+        legend: "Sign in",
+        small: "Register"
+      },
       user: '',
       password: '',
+      password2: '',
       remember: '',
-      cookie: '',
-      data: this
+      types: 'login'
     },
     methods: {
       login: function(){
         axios.post(localhost+'/login',{
-          user: app.user,
-          password: app.password
-        })
+          user: this.user,
+          password: this.password,
+          types: this.types
+        },{'contentType':'application/json'})
         .then(function(response) {
-          document.write(response);
+          let data = response.data
+          if(data){
+            window.location.href = "http://localhost:8000/home.html"
+          } else {
+           alert("错误")
+          }
         })
         .catch(function(error) {
           console.log(error);
         })
+      },
+      register: function(){
+        if(this.password != this.password2) {
+          alert('两次密码不相同');
+          return;
+        }
+
+        axios.post(localhost+'/login',{
+          user: this.user,
+          password: this.password,
+          types: this.types
+        },{'contentType':'application/json'})
+        .then(function(response) {
+          let data = response.data
+          if(data){
+           alert('注册成功')
+          } else {
+           alert("错误,用户名已注册")
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      },
+      titleSwitch: function(){
+        let a = this.title.legend;
+        let b = this.title.small;
+
+        this.title.legend = b;
+        this.title.small = a;
+
+        if(this.types == 'login'){
+          this.types = 'register'
+        } else if(this.types == 'register'){
+          this.types = 'login'
+        }
+
       }
     },
     computed: {
