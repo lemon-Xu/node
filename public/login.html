@@ -57,9 +57,6 @@
                <input type="submit" v-if="types == 'login'" value="登陆" class="button round small-12 columns" v-on:click="login()"/>
                 
                <input type="submit" v-else-if="types == 'register'" value="注册" class="button round small-12 columns" v-on:click="register()"/>
-               
-
-
             </div>
          </fieldset>        
          
@@ -73,9 +70,9 @@
 <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
 <script src="vue1.js"></script>
 <script src="axios.min.js"></script>
+<script src="js/vueComponent.js"></script>
 
 <script>
-  const localhost = "http://localhost:8000";
   var app = new Vue({
     el: '#app',
     data: {

@@ -10,44 +10,29 @@
 <body>
 <div id="app">
 	<!-- 导航区 -->
-	<nav class="top-bar" data-topbar>
-  		<ul class="title-area">
-    		<li class="name">
-      			<!-- 如果你不需要标题或图标可以删掉它 -->
-      			<h1><a href="#">{{navigation.name}}</a></h1>
-   			</li>
-      	<!-- 小屏幕上折叠按钮: 去掉 .menu-icon 类，可以去除图标。 
-      	如果需要只显示图片，可以删除 "Menu" 文本 -->
-   			 <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-  		</ul>
-
-  		<section class="top-bar-section" >
-    		<ul class="left" >
-    			<li v-for="title in navigation.title"><a :href='title.href'>{{title.name}}</a></li>
-    		</ul>
- 		 </section>
-
- 		 <section class="top-bar-section">
- 		 	<ul class="right">
- 		 		<li><a>{{usersName}}</a></li>
- 		 		<li><a>注销</a></li>
- 		 	</ul>
- 		 </section>
+	<navigation></navigation>
 	</nav>
 	
 	<!-- 内容区域 -->
-	<div>
-
+	<div  class="row" style="margin-top:3rem;">
+		<div class="small-1 columns">&nbsp</div>
+		<div class="small-10 columns" >
+			<books v-bind:books="books" ></books>
+		</div>
+		<div class="small-1 columns">&nbsp</div>
 	</div>
-</div>
 
+	
+
+</div>
+</body>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
 <script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
 <script src="/vue1.js"></script>
 <script src="/axios.min.js"></script>
 <script src="/js.cookie.min.js"></script>
-
+<script src="/js/vueComponent.js"></script>
 <!-- 初始化 Foundation JS -->
 <script>
 $(document).ready(function() {
@@ -56,7 +41,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-const localhost = "http://localhost:8000";
 var app = new Vue({
 	el: '#app',
 	data: {
@@ -81,19 +65,39 @@ var app = new Vue({
 							'href': ''
 						}
 			]
-		}
+		},
+		'books':''
 	},
 	computed: {
 		usersName: function(){
 			return  Cookies.get("usersName") || '登陆';
-		}
+		},
+		
+	},
+	created(){
+		axios.post(localhost+'/book',{
+			'way': 'select',
+			'decide': 'isLoan',
+			'decidePara': '0'
+		},{'Content-Type':'application'})
+		.then(function(response){
+			let data = response.data;
+			app.books = data
+		})
+		.then(function(error){
+			if(error != undefined)
+				console.log(error);
+		})
 	},
 	methods: {
-		'isLogin': function(){
-
-		}
+		logout: function(){ // 注销
+			Cookies.remove('usersName');
+			Cookies.remove('usersID');
+			window.location.href = "http://localhost:8000/login"
+		},
+		
 	}
 });
 </script>
-</body>
+
 </html>

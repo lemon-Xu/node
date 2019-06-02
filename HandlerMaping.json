@@ -1,3 +1,5 @@
 {
-	"/login": "login"
+	"/login": "login",
+	"/usersBook": "usersBook",
+	"/book": "book"
 }

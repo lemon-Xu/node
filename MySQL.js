@@ -14,14 +14,16 @@ function query(sql, param, callback){
 		if(err){
 			console.log('-------------数据库连接池  获取连接失败--------------');
 			console.log(err);
+			console.log('-------------数据库连接池  获取连接失败  end--------------');
 		}
 		connection.query(sql, param, function(error, results, fields){
 			if(error){
 				console.log("--------------数据库连接池  查询失败-------------------");
 				console.log(error);
+				console.log("--------------数据库连接池  查询失败  end-------------------");
 			}
 			connection.release();
-			callback(err, results, fields)
+			callback(error, results, fields)
 		});
 	})
 }
