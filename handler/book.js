@@ -20,20 +20,38 @@ function POST(para,response){
 	let decide = para.decide;
 	let decidePara = para.decidePara;
 	if(way == 'select'){
-		if(decide == 'isLoan') {
-			let sql = "SELECT * FROM book";
-			let para = [decidePara]
+		if(decide == 'all') {
+			if(decidePara == "激活"){
+				let sql = "SELECT * FROM book WHERE book_status = '激活'";
+				let para = [decidePara]
 
 
-			mysql.query(sql, para, function(err, results){
-				if(err){
-					response.writeHead(200);
-					response.end('false')
-				} else if(results != undefined){
-					console.log(results);
-					response.end(JSON.stringify(results))
-				}
-			});
+				mysql.query(sql, para, function(err, results){
+					if(err){
+						response.writeHead(200);
+						response.end('false')
+					} else if(results != undefined){
+						console.log(results);
+						response.end(JSON.stringify(results))
+					}
+				});
+			}
+			if(decidePara == "null"){
+				let sql = "SELECT * FROM book";
+				let para = [decidePara]
+
+
+				mysql.query(sql, para, function(err, results){
+					if(err){
+						response.writeHead(200);
+						response.end('false')
+					} else if(results != undefined){
+						console.log(results);
+						response.end(JSON.stringify(results))
+					}
+				});
+			}
+			
 		}
 		
 	}

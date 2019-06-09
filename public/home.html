@@ -77,8 +77,8 @@ var app = new Vue({
 	created(){
 		axios.post(localhost+'/book',{
 			'way': 'select',
-			'decide': 'isLoan',
-			'decidePara': '0'
+			'decide': 'all',
+			'decidePara': '激活',
 		},{'Content-Type':'application'})
 		.then(function(response){
 			let data = response.data;

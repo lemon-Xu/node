@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>后台管理</title>
+<link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
+</head>
+<body>
+	
+<div id="app">
+	<navigation-manager :active='"借阅查询"'></navigation-manager>
+
+	<!--  内容区 -->
+	<div class="row">
+		<div class="small-12 columns">
+			<div class="row">
+				<div class="small-2 columns" v-for="t in title">{{t}}</div>
+			</div>
+
+			<div class="row">
+		
+				<bookr-manager v-for="bookR in booksR" v-bind:book="bookR" :status="'归还'"></bookr-manager>
+				<bookb-manager v-for="bookB in booksB" :book="bookB" :status="'出借'"></bookb-manager>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+
+
+
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<script src="/vue1.js"></script>
+<script src="/axios.min.js"></script>
+<script src="/js.cookie.min.js"></script>
+<script src="/js/vueComponent.js"></script>
+<!-- 初始化 Foundation JS -->
+<script>
+$(document).ready(function() {
+    $(document).foundation();
+})
+</script>
+
+<script>
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		booksR: null,
+		booksB: null,
+		title: ['用户', '书名', '状态', '借书日期', '归还日期', '罚款']
+	},
+	methods: {
+
+	},
+	computed:{
+		
+	},
+	created(){
+		// 归还图书查询
+		axios.post(localhost+'/usersBook',{
+			way: "selectReturnAll",
+			usersID: Cookies.get('usersID')
+		},{'Content-Type':'application/json'})
+		.then(function(response){
+			app.booksR = response.data;
+			console.log(response.data)
+		})
+		.catch(function(err){
+			console.log(err)
+		});
+
+		// 借阅图书查询
+		axios.post(localhost+'/usersBook', {
+			way: 'selectBorrowAll',
+			usersID: Cookies.get('usersID')
+		},{'Content-Type':'application/json'})
+		.then(function(response){
+			console.log(response.data);
+			app.booksB = response.data
+		})
+		.catch(function(err){
+			console.log(err)
+		});
+	}
+});
+
+</script>
+
+</body>
+</html>

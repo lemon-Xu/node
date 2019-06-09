@@ -23,17 +23,37 @@ function POST(method, para, response){
 	
 	if(types == 'login'){
 		let p = [user, password];
-		let sql = "SELECT users_id FROM users WHERE users_name = ? and users_password = MD5(?)";
+		let sql = "SELECT users_id, users_status FROM users WHERE users_name = ? and users_password = MD5(?)";
 		mysql.query(sql, p, function(error, results, fields){
+			if(error){
+				console.log(error)
+			}
 			console.log(results.length)
-			if(results.length != 0){
+			if(results.length == 1){
 				console.log("ÓÃ»§",user,"µÇÈë");
-				let  usersName= cookie.serialize('usersName', user);
+				console.log(results[0].users_status)
+				let usersName= cookie.serialize('usersName', user);
 				let usersID = cookie.serialize('usersID', results[0]['users_id']);
+				let usersStatus = cookie.serialize('usersStatus', results[0].users_status)
+				let users_status = results[0].users_status; 
 
-				response.writeHead(200,{'Content-Type': 'application/json', 'Set-Cookie':[usersName,usersID]});
-				console.log(response.headers)
-				response.end('true')
+				if(users_status == 2){
+					response.writeHead(200,{'Content-Type': 'application/json', 'Set-Cookie':[usersName, usersID, usersStatus]});
+					console.log(response.headers)
+					response.end('home')
+				} else if(users_status == 1){
+					//response.writeHead(200, {'Content-Type':'application/json', 'Set-Cookie':[usersName, usersID]});
+					fileServer.privateFileServer('/manager.html', response, function(){
+						console.log("----hook-------");
+						response.writeHead(200,{'Set-Cookie': [usersName, usersID, usersStatus]});
+					})
+				} else {
+					response.writeHead(200, {'Content-Type': 'application/json'})
+					response.end('f');
+				}
+
+
+				
 			} else {
 				console.log('µÇÂ½Ê§°Ü',user)
 				response.writeHead(200,{'Content-Type':'application/json'});

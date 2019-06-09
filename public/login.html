@@ -95,10 +95,12 @@
         },{'contentType':'application/json'})
         .then(function(response) {
           let data = response.data
-          if(data){
+          if(data == 'home'){
             window.location.href = "http://localhost:8000/home.html"
-          } else {
+          } else if(data == "f"){
            alert("错误")
+          } else {
+            document.write(data)
           }
         })
         .catch(function(error) {

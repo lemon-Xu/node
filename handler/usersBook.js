@@ -98,6 +98,36 @@ function post(para, response){
 				response.end(books);
 			}
 		});
+	} else if(way == 'selectReturnAll'){
+		console.log('selectReturnAll');
+		let sql = "SELECT users_name, book_name, users_book_borrow_date, users_book_return_date, users_book_return_price  FROM users, book, users_book_return, users_book_borrow WHERE users_id = users_book_borrow_users_id and book_id = users_book_return_book_id and users_book_return_book_id=users_book_borrow_book_id;";
+		let para = [];
+		mysql.query(sql, para, function(err, results){
+			if(err){
+				console.log(err);
+			}
+			if(results != undefined){
+				let ret = JSON.stringify(results)
+				// console.log(ret);
+				response.writeHead(200, {'Content-Type':'application/json'});
+				response.end(ret);
+			}
+		})
+	} else if(way == "selectBorrowAll"){
+		console.log('selectBorrowAll');
+		let sql = "SELECT  users_name, book_name, users_book_borrow_date, users_book_borrow_date, book_price FROM book, users, users_book_borrow WHERE book_id = users_book_borrow_book_id and users_id = users_book_borrow_users_id;";
+		let para = [];
+		mysql.query(sql, para, function(err, results){
+			if(err){
+				console.log(err);
+			}
+			if(results != undefined){
+				console.log(results)
+				let ret = JSON.stringify(results);
+				response.writeHead(200,{'Content-Type':'application/json'});
+				response.end(ret);
+			}
+		});
 	}
 }
 

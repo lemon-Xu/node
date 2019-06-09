@@ -12,6 +12,13 @@
 	
 	<div id="app">
 		<navigation></navigation>
+
+		<div class="row">
+
+
+		</div>
+
+
 	</div>
 
 
@@ -33,7 +40,24 @@ $(document).ready(function() {
 	var app = new Vue({
 		el: '#app',
 		data: {
+			bookReturn:{
+				title: ['借书日期', '还书日期', '罚款'],
+				value: ['users_book_borrow_date', '', '']
+			},
+			books: null,
 
+		},
+		methods: {
+
+		},
+		created(){
+			axios.post(localhost+'/usersBook',{
+				usersID: Cookies.get('usersID'),
+				way: 'select'
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				console.log(response.data)
+			})
 		}
 	});
 
