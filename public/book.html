@@ -9,7 +9,7 @@
 <body>
 	
 <div id="app">
-	<navigation-manager :active='"借阅查询"'></navigation-manager>
+	<navigation-manager :active='"图书管理"'></navigation-manager>
 
 	<!--  内容区 -->
 	<div class="row" id="content-area">
@@ -106,7 +106,10 @@ var app = new Vue({
 		bookActive: function(bookID){
 			console.log('bookActive: '+bookID)
 			axios.post(localhost+'/book',{
-
+				'usersID': parseInt(Cookies.get('usersID')),
+				'bookID': bookID,
+				'way': 'update',
+				'decide': 'active',
 			},{'Content-Type':'application/json'})
 			.then(function(response){
 				let data = response.data;
@@ -116,6 +119,7 @@ var app = new Vue({
 				} else {
 					alert(text+' 失败');
 				}
+				app.selectBooks();
 			})
 			.catch(function(err){
 				console.log(err);
@@ -124,20 +128,39 @@ var app = new Vue({
 		bookBan: function(bookID){
 			console.log('bookBan: '+bookID)
 			axios.post(localhost+'/book',{
-
+				'usersID': parseInt(Cookies.get('usersID')),
+				'bookID': bookID,
+				'way': 'update',
+				'decide': 'ban',
 			},{'Content-Type':'application/json'})
 			.then(function(response){
 				let data = response.data;
 				let text = '禁用图书: '+bookID;
-				if(data = "OK") {
+				if(data == "OK") {
 					alert(text+' 成功');
 				} else {
 					alert(text+' 失败');
 				}
+				app.selectBooks();
 			})
 			.catch(function(err){
 				console.log(err);
 			})
+		},
+		selectBooks: function(){
+			axios.post(localhost+'/book',{
+				way: "select",
+				decide: 'all',
+				decidePara: 'null',
+				usersID: Cookies.get('usersID'),
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				app.books = response.data;
+				console.log(response.data)
+			})
+			.catch(function(err){
+				console.log(err)
+			});
 		}
 	},
 	computed:{

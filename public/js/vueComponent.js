@@ -1,4 +1,10 @@
 var localhost = "http://localhost:8000";
+const dayRemaing = 30;
+
+const date = new Date();
+const day = date.getDate();
+const year = date.getFullYear();
+const mouth = date.getMonth() + 1;
 
 // 导航栏组件
 Vue.component('navigation', {
@@ -164,14 +170,10 @@ Vue.component('navigation-manager', {
 			window.location.href = "http://localhost:8000/login"
 		},
 		book: function(){
-			axios.post(localhost+'/book',{
-				'usersID': parseInt(Cookies.get('usersID')),
-				'way': 'select',
-				'decide': 'all'
-			},{'Content-Type':'application/json'})
-			.then(function(response){
-				console.log(response.data)
-			})
+			window.location.href = localhost + '/book.html'
+		},
+		usersBook: function(){
+			window.location.href = localhost + '/bookAccount.html'
 		}
 	},
 	created(){
@@ -200,6 +202,46 @@ Vue.component('bookb-manager', {
 	data(){
 		return{
 			'nbsp': '归还日期'
+		}
+	}
+});
+
+
+Vue.component('date-borrow', {
+	template: '<div class="small-2 columns">{{getDate(date)}}</div>',
+	props: ['date'],
+	data(){
+		return{
+			
+		}
+	},
+	methods: {
+		getDate: function(dateStr){
+			let date = new Date(dateStr);
+			date.setHours(8);
+			let year = date.getFullYear();
+			let mouth = date.getMonth() + 1;
+			let day = date.getDate();
+			let ret = year+ '-' + mouth + '-' + day;
+			return ret; 
+		}
+	}
+});
+
+Vue.component('date-return', {
+	template: '<div class="small-2 columns">{{dateRemain(date)}}</div>',
+	props: ['date'],
+	data(){
+		return{
+			
+		}
+	},
+	methods: {
+		dateRemain: function(date){
+			let dateBook = new Date(users_book_borrow_date)
+			dateBook.setHours(8);
+			
+			return dayRemaing - Math.abs( parseInt( (dateBook.getTime() - date.getTime() ) / (24 * 60 * 60 * 1000) ) ); 			
 		}
 	}
 });

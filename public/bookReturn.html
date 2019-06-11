@@ -13,10 +13,42 @@
 	<div id="app">
 		<navigation></navigation>
 
-		<div class="row">
-
-
+	<div class="row" style="margin-top: 3rem;">
+		<div class="small-4 columns">&nbsp</div>
+		<div class="small-8 columns">
+			<template v-for="(title, index ) in bookReturn.title">
+				<div class="small-3 columns">{{title.name}}</div>
+				<div class="small-3 columns">剩余时间</div>
+				<div class="small-3 columns">罚款</div>
+				<div class="small-3 columns button tiny">还书</div>
+			</template>
 		</div>
+
+		<div style="margin-top: 3rem;" class="">
+			<template v-for="book in books">
+				<div class="columns panel">
+					<div class="small-4 columns">
+						<div class="small-4 columns">
+							<img src="img/a123.jpg" alt="book">
+						</div>
+						<div class="small-8 columns">
+							<h5><b>{{book.book_name}}</b></h5>
+							<h6>{{book.book_author}}</h6>						
+						</div>
+					</div>
+					<div class="small-8 columns">
+			
+						<div class="small-3 columns">{{getDate(book.users_book_borrow_date)}}</div>
+						<div class="small-3 columns">{{dateRemain(book.users_book_borrow_date)}}</div>
+						<div class="small-3 columns">{{getPenalty(book.users_book_borrow_date, book.book_price)}}</div>
+						<div class="small-3 columns button tiny">还书</div>
+				
+					</div>
+					
+				</div>
+			</template>
+		</div>
+	</div>
 
 
 	</div>
@@ -37,26 +69,81 @@ $(document).ready(function() {
 </script>
 
 <script>
+	 
+
+
+
+
 	var app = new Vue({
 		el: '#app',
 		data: {
-			bookReturn:{
-				title: ['借书日期', '还书日期', '罚款'],
-				value: ['users_book_borrow_date', '', '']
-			},
 			books: null,
-
+			content: null,
+			bookReturn:{
+				title: [
+					{
+						'name': '借书日期',
+						'value': 'users_book_borrow_date'
+					},
+				
+				]
+			}
 		},
-		methods: {
-
+		methods:{
+			bookAccount: function(){ // 获得图书清单
+				axios.post(localhost+'/usersBook',{
+					'usersID': parseInt(Cookies.get('usersID')),
+					'way': 'select',
+				},{'Content-Type':'application/json'})
+				.then(function(response){
+					let data = response.data
+					app.books = data;
+					console.log(data)
+				})
+				.catch(function(err){
+					console.log(err)
+				})
+			},
+			getDate: function(dateStr){
+				let date = new Date(dateStr);
+				date.setHours(8);
+				let year = date.getFullYear();
+				let mouth = date.getMonth() + 1;
+				let day = date.getDate();
+				let ret = year+ '-' + mouth + '-' + day;
+				return ret;
+			},
+			dateRemain: function(users_book_borrow_date){
+				let dateBook = new Date(users_book_borrow_date)
+				dateBook.setHours(8);
+				
+				return dayRemaing - Math.abs( parseInt( (dateBook.getTime() - date.getTime() ) / (24 * 60 * 60 * 1000) ) ); 
+			},
+			getPenalty: function(users_book_borrow_date, price){
+				let day = app.dateRemain(users_book_borrow_date);
+				console.log(day)
+				console.log(typeof(day))
+				console.log(typeof(price))
+				let penalty = 0;
+				if(day < 0){
+					penalty = day * price;
+				}
+				return Math.abs(Math.round(penalty));
+			}
 		},
 		created(){
+			// 获得为还图书清单
 			axios.post(localhost+'/usersBook',{
-				usersID: Cookies.get('usersID'),
-				way: 'select'
+				'usersID': parseInt(Cookies.get('usersID')),
+				'way': 'select',
 			},{'Content-Type':'application/json'})
 			.then(function(response){
-				console.log(response.data)
+				let data = response.data
+				app.books = data;
+				console.log(data)
+			})
+			.catch(function(err){
+				console.log(err)
 			})
 		}
 	});

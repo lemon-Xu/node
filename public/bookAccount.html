@@ -65,7 +65,7 @@ $(document).ready(function() {
 			bookReturn:{
 				title: [
 					{
-						'name': '结束日期',
+						'name': '借书日期',
 						'value': 'users_book_borrow_date'
 					},
 					{
@@ -95,8 +95,9 @@ $(document).ready(function() {
 				'way': 'selectReturn',
 			},{'Content-Type':'application/json'})
 			.then(function(response){
-				app.books = response.data;
-				console.log(response)
+				let data = response.data
+				app.books = data;
+				console.log(data);
 			})
 			.catch(function(err){
 				console.log(err)

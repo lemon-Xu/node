@@ -19,7 +19,8 @@ function POST(para,response){
 	let way = para.way;
 	let decide = para.decide;
 	let decidePara = para.decidePara;
-	if(way == 'select'){
+
+	if(way == 'select'){ // 查询
 		if(decide == 'all') {
 			if(decidePara == "激活"){
 				let sql = "SELECT * FROM book WHERE book_status = '激活'";
@@ -52,8 +53,49 @@ function POST(para,response){
 				});
 			}
 			
+		}	
+	} else if(way == 'update'){ // 更新
+		let usersID = para.usersID;
+		let bookID = para.bookID;
+
+		if(decide == 'ban') {
+
+			let sql = "UPDATE book SET book_status = '禁止' WHERE book_id = ? and book_status = '激活' ;";
+			let para = [bookID];
+
+			mysql.query(sql, para, function(err, results){
+				if(err){
+					console.log(err);
+					response.writeHead(200,{'Content-Type':'application'});
+					response.end('err')
+				} else if(results != undefined && results['changedRows'] == 1){
+					console.log(results);
+					response.writeHead(200,{'Content-Type':'application/json'});
+					response.end('OK')
+				} else {
+					response.writeHead(200,{'Content-Type':'application'});
+					response.end('失败')
+				}
+			});
+		} else if(decide == 'active') {
+
+			let sql = "UPDATE book SET book_status = '激活' WHERE book_id = ? and book_status = '禁止' ;";
+			let para = [bookID];
+			mysql.query(sql, para, function(err, results){
+				if(err){
+					console.log(err);
+					response.writeHead(200,{'Content-Type':'application'});
+					response.end('err')
+				} else if(results != undefined && results['changedRows'] == 1){
+					console.log(results);
+					response.writeHead(200,{'Content-Type':'application/json'});
+					response.end('OK')
+				} else {
+					response.writeHead(200,{'Content-Type':'application'});
+					response.end('失败')
+				}
+			})
 		}
-		
 	}
 }
 
