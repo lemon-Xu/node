@@ -128,6 +128,11 @@ function post(para, response){
 				response.end(ret);
 			}
 		});
+	} else if(way == 'returnBook'){ // 归还图书
+		console.log('returnBook');
+
+		let sql = "";
+		let para = [];
 	}
 }
 

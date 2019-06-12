@@ -12,7 +12,7 @@
 	<navigation-manager :active='"借阅查询"'></navigation-manager>
 
 	<!--  内容区 -->
-	<div class="row">
+	<div class="row" id="content-area">
 		<div class="small-12 columns">
 			<div class="row">
 				<div class="small-2 columns" v-for="t in title">{{t}}</div>
@@ -24,7 +24,10 @@
 				<bookb-manager v-for="bookB in booksB" :book="bookB" :status="'出借'"></bookb-manager>
 			</div>
 		</div>
+
 	</div>
+	
+
 
 
 </div>
@@ -39,7 +42,7 @@
 <script src="/vue1.js"></script>
 <script src="/axios.min.js"></script>
 <script src="/js.cookie.min.js"></script>
-<script src="/js/vueComponent.js"></script>
+<script src="/js/vueComponent2.js"></script>
 <!-- 初始化 Foundation JS -->
 <script>
 $(document).ready(function() {

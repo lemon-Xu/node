@@ -1,13 +1,3 @@
-var localhost = "http://localhost:8000";
-const dayRemaing = 30;
-
-const date = new Date();
-const day = date.getDate();
-const year = date.getFullYear();
-const mouth = date.getMonth() + 1;
-
-
-
 // 导航栏组件
 Vue.component('navigation', {
 	template: '<nav class="top-bar" data-topbar><ul class="title-area"><li class="name"><h1><a href="#">{{navigation.name}}</a></h1></li><li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li></ul><section class="top-bar-section" ><ul class="left" ><li v-for="title in navigation.title" :class="isAction(title.active)"><a :href="title.href">{{title.name}}</a></li></ul></section><section class="top-bar-section"><ul class="right"><li><a :href="usersName.href">{{usersName.name}}</a></li><li @click="logout()"><a>注销</a></li></ul></section></nav>',
@@ -19,7 +9,7 @@ Vue.component('navigation', {
 						{
 							'name': 'Home',
 							'href': 'http://localhost:8000/home.html',
-							'active': '/manager'
+							'active': '/home.html'
 						},
 						{
 							'name': '借阅',
@@ -29,12 +19,12 @@ Vue.component('navigation', {
 						{
 							'name': '还书',
 							'href': 'http://localhost:8000/bookReturn.html',
-							'active': '/manager/bookReturn'
+							'active': '/bookReturn.html'
 						},
 						{
 							'name': '清单',
 							'href': 'http://localhost:8000/bookAccount.html',
-							'active': '/manager/bookAccount'
+							'active': '/bookAccount.html'
 						}
 					],
 			}
@@ -176,9 +166,6 @@ Vue.component('navigation-manager', {
 		},
 		usersBook: function(){
 			window.location.href = localhost + '/manager.html'
-		},
-		account: function(){
-			
 		}
 	},
 	created(){

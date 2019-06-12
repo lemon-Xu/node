@@ -96,6 +96,29 @@ function POST(para,response){
 				}
 			})
 		}
+	} else if(way == 'insert'){
+		if(decide == 'one'){
+
+			let bookName = para.bookName;
+			let bookPress = para.bookPress;
+			let bookAuthor = para.bookAuthor;
+			let bookPrice = para.bookPrice;
+
+			let sql = 'INSERT INTO book (book_name, book_press, book_author, book_price) VALUES  (?, ?, ?, ?)';
+			let para2 = [bookName, bookPress, bookAuthor, bookPrice];
+			mysql.query(sql, para2, function(err, results){
+				
+				if(err){
+					console.log(err);
+					response.writeHead(200, {'Content-Type':'application/json'});
+					response.end('False');
+				} else if(results != undefined){
+					console.log(results);
+					response.writeHead(200, {'Content-Type':'application/json'});
+					response.end('OK');
+				} 
+			})
+		}
 	}
 }
 

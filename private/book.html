@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图书管理</title>
+<link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
+</head>
+<body>
+	
+<div id="app">
+	<navigation-manager :active='"图书管理"'></navigation-manager>
+
+	<!--  内容区 -->
+	<div class="row" id="content-area">
+		<div class="small-12 columns">
+
+	
+			<div class="row">
+				<div class="small-9 columns">
+					<div class="small-2 columns" v-for="t in title">{{t.key}}</div>
+				</div>
+				<div class="small-3 columns">&nbsp</div>
+			</div>
+
+			<hr></hr>
+
+			<template v-for="book in books">
+				<div class="row" style="margin: 0 0 2rem 0;">
+					<div class="small-9 columns">
+						<template v-for="t in title">
+							<div class="small-2 columns">{{book[t.value]}}</div>
+						</template>
+					</div>
+					<div class="small-3 columns">
+						<template v-if="book['book_status'] != '激活'">
+							<div class="small-6 columns button tiny" @click="bookActive(book['book_id'])">激活</div>
+							<div class="small-6 columns">&nbsp</div>
+						</template>
+						<template v-else>
+							<div class="small-6 columns">&nbsp</div>
+							<div class="small-6 columns button tiny" @click="bookBan(book['book_id'])">禁止</div>
+						</template>
+					</div>
+				</div>
+				
+			</template>
+			
+		</div>
+
+	</div>
+	
+
+
+
+</div>
+
+
+
+
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<script src="/vue1.js"></script>
+<script src="/axios.min.js"></script>
+<script src="/js.cookie.min.js"></script>
+<!-- <script src="/js/vueComponent.js"></script> -->
+<!-- 初始化 Foundation JS -->
+<script>
+$(document).ready(function() {
+    $(document).foundation();
+})
+</script>
+
+<script>
+
+var app = new Vue({
+	el: '#app',
+	data: {
+		books: null,
+		title: [
+			{
+				'key': '图书编号',
+				'value': 'book_id',
+			},
+			{
+				'key': '书名',
+				'value': 'book_name',
+			},
+			{
+				'key': '作者',
+				'value': 'book_author',
+			},
+			{
+				'key': '状态',
+				'value': 'book_status',
+			},
+			{
+				'key': '罚款每天',
+				'value': 'book_price',
+			},
+		]
+	},
+	methods: {
+		bookActive: function(bookID){
+			console.log('bookActive: '+bookID)
+			axios.post(localhost+'/book',{
+				'usersID': parseInt(Cookies.get('usersID')),
+				'bookID': bookID,
+				'way': 'update',
+				'decide': 'active',
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				let data = response.data;
+				let text = '激活图书: '+bookID;
+				if(data = "OK") {
+					alert(text+' 成功');
+				} else {
+					alert(text+' 失败');
+				}
+				app.selectBooks();
+			})
+			.catch(function(err){
+				console.log(err);
+			})
+		},
+		bookBan: function(bookID){
+			console.log('bookBan: '+bookID)
+			axios.post(localhost+'/book',{
+				'usersID': parseInt(Cookies.get('usersID')),
+				'bookID': bookID,
+				'way': 'update',
+				'decide': 'ban',
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				let data = response.data;
+				let text = '禁用图书: '+bookID;
+				if(data == "OK") {
+					alert(text+' 成功');
+				} else {
+					alert(text+' 失败');
+				}
+				app.selectBooks();
+			})
+			.catch(function(err){
+				console.log(err);
+			})
+		},
+		selectBooks: function(){
+			axios.post(localhost+'/book',{
+				way: "select",
+				decide: 'all',
+				decidePara: 'null',
+				usersID: Cookies.get('usersID'),
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				app.books = response.data;
+				console.log(response.data)
+			})
+			.catch(function(err){
+				console.log(err)
+			});
+		}
+	},
+	computed:{
+		
+	},
+	created(){
+		// 全部图书查询
+		axios.post(localhost+'/book',{
+			way: "select",
+			decide: 'all',
+			decidePara: 'null',
+			usersID: Cookies.get('usersID'),
+		},{'Content-Type':'application/json'})
+		.then(function(response){
+			app.books = response.data;
+			console.log(response.data)
+		})
+		.catch(function(err){
+			console.log(err)
+		});
+
+	}
+});
+
+</script>
+
+</body>
+</html>
