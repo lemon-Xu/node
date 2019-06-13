@@ -1,0 +1,7 @@
+{
+	"findActiveBlogWithTitleLike": {
+		"head": "SELECT * FROM user",
+		"where":{"if": [{"user": "user == $"}, {"password": "password == $"}]}
+
+	}
+}

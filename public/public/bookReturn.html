@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>还书</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+  	<link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
+</head>
+
+<body>
+	
+	<div id="app">
+		<navigation></navigation>
+
+	<div class="row" style="margin-top: 3rem;">
+		<div class="small-4 columns">&nbsp</div>
+		<div class="small-8 columns">
+			<template v-for="(title, index ) in bookReturn.title">
+				<div class="small-3 columns">{{title.name}}</div>
+				<div class="small-3 columns">剩余时间</div>
+				<div class="small-3 columns">罚款</div>
+				<div class="small-3 columns button tiny">还书</div>
+			</template>
+		</div>
+
+		<div style="margin-top: 3rem;" class="">
+			<template v-for="book in books">
+				<div class="columns panel">
+					<div class="small-4 columns">
+						<div class="small-4 columns">
+							<img src="img/a123.jpg" alt="book">
+						</div>
+						<div class="small-8 columns">
+							<h5><b>{{book.book_name}}</b></h5>
+							<h6>{{book.book_author}}</h6>						
+						</div>
+					</div>
+					<div class="small-8 columns">
+			
+						<div class="small-3 columns">{{getDate(book.users_book_borrow_date)}}</div>
+						<div class="small-3 columns">{{dateRemain(book.users_book_borrow_date)}}</div>
+						<div class="small-3 columns">{{getPenalty(book.users_book_borrow_date, book.book_price)}}</div>
+						<div class="small-3 columns button tiny" @click="returnBook(book)">还书</div>
+				
+					</div>
+					
+				</div>
+			</template>
+		</div>
+	</div>
+
+
+	</div>
+
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<script src="/vue1.js"></script>
+<script src="/axios.min.js"></script>
+<script src="/js.cookie.min.js"></script>
+<script src="/js/vueComponent.js"></script>
+<!-- 初始化 Foundation JS -->
+<script>
+$(document).ready(function() {
+    $(document).foundation();
+})
+</script>
+
+<script>
+	 
+var app = new Vue({
+	el: '#app',
+	data: {
+		books: null,
+		content: null,
+		bookReturn:{
+			title: [
+				{
+					'name': '借书日期',
+					'value': 'users_book_borrow_date'
+				},
+			
+			]
+		}
+	},
+	methods:{
+		bookAccount: function(){ // 获得图书清单
+			axios.post(localhost+'/usersBook',{
+				'usersID': parseInt(Cookies.get('usersID')),
+				'way': 'select',
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				let data = response.data
+				app.books = data;
+				console.log(data)
+			})
+			.catch(function(err){
+				console.log(err)
+			})
+		},
+		getDate: function(dateStr){
+			let date = new Date(dateStr);
+			date.setHours(8);
+			let year = date.getFullYear();
+			let mouth = date.getMonth() + 1;
+			let day = date.getDate();
+			let ret = year+ '-' + mouth + '-' + day;
+			return ret;
+		},
+		dateRemain: function(users_book_borrow_date){
+			let dateBook = new Date(users_book_borrow_date)
+			dateBook.setHours(8);
+			
+			return dayRemaing - Math.abs( parseInt( (dateBook.getTime() - date.getTime() ) / (24 * 60 * 60 * 1000) ) ); 
+		},
+		getPenalty: function(users_book_borrow_date, price){
+			let day = app.dateRemain(users_book_borrow_date);
+			console.log(day)
+			console.log(typeof(day))
+			console.log(typeof(price))
+			let penalty = 0;
+			if(day < 0){
+				penalty = day * price;
+			}
+			return Math.abs(Math.round(penalty));
+		},
+		returnBook: function(book){
+			axios.post(localhost+'/usersBook',{
+				'usersID': parseInt(Cookies.get('usersID')),
+				'way': 'returnBook',
+				'bookBorrowDate': app.getDate(book.users_book_borrow_date),
+				'bookID': book.book_id,
+				'bookPrice': this.getPenalty(book.users_book_borrow_date, book.book_price),
+				'bookReturnDate': year +'-' + mouth +'-' + day,
+			},{'Content-Type':'application/json'})
+			.then(function(response){
+				let data = response.data;
+				if(data == 'update OK'){
+					alert('还书成功');
+					app.bookAccount();
+				} else if(data == 'update False'){
+					alert('还书失败');
+					app.bookAccount();
+				}
+				console.log(data);
+			})
+			.catch(function(err){
+				console.log(err);
+			})
+		}
+	},
+	created(){
+		// 获得为还图书清单
+		axios.post(localhost+'/usersBook',{
+			'usersID': parseInt(Cookies.get('usersID')),
+			'way': 'select',
+		},{'Content-Type':'application/json'})
+		.then(function(response){
+			let data = response.data
+			app.books = data;
+			console.log(data)
+		})
+		.catch(function(err){
+			console.log(err)
+		})
+	}
+});
+
+</script>
+</body>
+</html>

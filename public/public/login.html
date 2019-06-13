@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/foundation/5.5.3/css/foundation.min.css">
+  <link rel="stylesheet" href="http://static.runoob.com/assets/foundation-icons/foundation-icons.css">
+</head>
+<body>
+<header style="position:fixed 0 0 0 0; border-bottom: 1px solid #f0f0f0;padding: 1rem 0 1rem 0" class="row">
+   <div class="small-5 columns">&nbsp</div>
+   <div class="small-2 columns fi-home">&nbsp</div>
+   <div class="small-5 columns">&nbsp</div>
+</header>
+<div id="app" class="row" style="margin-top: 2rem;">
+   <div class="small-0 medium-6 columns">&nbsp</div>
+   <div class="small-12 medium-6 columns c">
+      
+         <fieldset>
+            <legend v-on:click="titleSwitch()">{{title.legend}} <small>{{title.small}}</small></legend>
+            <div class="row collapse prefix-radius">
+               <!-- user and password -->
+               <div class="small-12 columns" style="height:2.5rem;"></div>
+               <div class="small-2 columns">
+                  <label class="prefix fi-torso" for="user"></laber>
+               </div>
+               <div class="small-10 columns">
+                  <input type="text"  id="user" name="user" v-model="user" placeholder="学号/工号">
+               </div>
+               <div class="small-2 columns">
+                  <label for="password" class="prefix fi-lock"></label>
+               </div>
+               <div class="small-10 columns">
+                  <input type="password" name="password" v-model="password" id="password">
+               </div>
+
+               <div class="small-2 columns" v-if="types == 'register'">
+                  <label for="password" class="prefix fi-lock"></label>
+               </div>
+               <div class="small-10 columns" v-if="types == 'register'">
+                  <input  type="password" name="password" v-model="password2" id="passwrod2">
+              </div>
+
+               <!-- login and forget -->
+               <div class="small-12 columns" style="height:1.5rem;"></div>
+               <div class="small-4 columns"><input type="checkbox"><span style="font-size:0.8rem;">记住密码</span></div>
+               <!-- div class="small-3 columns">
+                  <p class="" style="font-size:0.8rem;">记住密码</p>
+               </div> -->
+               <div class="small-4 columns">&nbsp</div>
+               <div class="small-4 columns">
+                  <a href="" style="font-size:0.8rem;float: right;">忘记密码?</a>
+               </div>
+               <div class="small-12 columns" style="height:3rem;"></div>
+
+               <input type="submit" v-if="types == 'login'" value="登陆" class="button round small-12 columns" v-on:click="login()"/>
+                
+               <input type="submit" v-else-if="types == 'register'" value="注册" class="button round small-12 columns" v-on:click="register()"/>
+            </div>
+         </fieldset>        
+         
+   </div>
+   <div class="medium-2 columns">&nbsp</div>
+</div>
+
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="https://cdn.staticfile.org/foundation/5.5.3/js/vendor/modernizr.js"></script>
+<script src="vue1.js"></script>
+<script src="axios.min.js"></script>
+<script src="js/vueComponent.js"></script>
+
+<script>
+  var app = new Vue({
+    el: '#app',
+    data: {
+      title: {
+        legend: "Sign in",
+        small: "Register"
+      },
+      user: '',
+      password: '',
+      password2: '',
+      remember: '',
+      types: 'login'
+    },
+    methods: {
+      login: function(){
+        axios.post(localhost+'/login',{
+          user: this.user,
+          password: this.password,
+          types: this.types
+        },{'contentType':'application/json'})
+        .then(function(response) {
+          let data = response.data
+          if(data == 'home'){
+            window.location.href = "http://localhost:8000/home.html"
+          } else if(data == "f"){
+           alert("错误")
+          } else {
+            document.write(data)
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      },
+      register: function(){
+        if(this.password != this.password2) {
+          alert('两次密码不相同');
+          return;
+        }
+
+        axios.post(localhost+'/login',{
+          user: this.user,
+          password: this.password,
+          types: this.types
+        },{'contentType':'application/json'})
+        .then(function(response) {
+          let data = response.data
+          if(data){
+           alert('注册成功')
+          } else {
+           alert("错误,用户名已注册")
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        })
+      },
+      titleSwitch: function(){
+        let a = this.title.legend;
+        let b = this.title.small;
+
+        this.title.legend = b;
+        this.title.small = a;
+
+        if(this.types == 'login'){
+          this.types = 'register'
+        } else if(this.types == 'register'){
+          this.types = 'login'
+        }
+
+      }
+    },
+    computed: {
+
+    }
+  });
+</script>
+
+</body>
+</html>
